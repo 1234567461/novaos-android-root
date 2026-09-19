@@ -59,3 +59,40 @@ adb devices            # 看到设备即连接成功
   日常 adb，都在“无线调试”界面显示。
 - **容器里没有 magiskboot？** 重跑一次 fetch-magisk.sh（网络问题时）。
 - **想删容器？** `proot-distro remove debian`（Termux 里执行）。
+
+---
+
+# 电脑端一键路线（可选）
+
+同一套自动化也可以在电脑上跑 Docker 容器，手机和电脑连**同一个路由器**
+（Wi-Fi），电脑端通过**手机在路由器下分配到的 IP** 无线连接手机——
+把示例 IP 换成你自己的即可。
+
+## 手机端准备（一次）
+
+1. 手机连 Wi-Fi（和电脑同一个路由器）
+2. 开发者选项 → **无线调试** → 打开
+3. 记下 “IP 地址和端口” 那一行，例如 `192.168.1.5:37000`
+   —— **这个 IP 是你路由器给手机分配的，每台手机不一样**，
+   下面命令里把它换成你自己的
+
+## 电脑端一键
+
+```sh
+# 需要先装 Docker（docker.com 下载 Desktop，Windows/Mac 均可）
+sh container/pc.sh connect 192.168.1.5:37000
+#                          ^^^^^^^^^^^^^^^^
+#                          换成你手机在无线调试里显示的 IP:端口
+```
+
+容器自动：连接手机 → 检测 → 提取 boot → 官方 magiskboot 修补 → 引导安装。
+手机插 USB 直连电脑也可以（需要把 USB 直通容器，脚本已带）：
+
+```sh
+sh container/pc.sh usb
+```
+
+> 首次 root 的那次 fastboot 写入，也可以在这个电脑端容器里做
+> （`--device /dev/bus/usb` 已直通 USB，手机进 fastboot 后
+> `docker exec -it novaos-root fastboot flash boot ...`）。
+> 完成之后，这台手机就永久走手机端全自动路线。

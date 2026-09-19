@@ -61,16 +61,22 @@ sh scripts/install.sh
 sh scripts/patch-boot.sh
 ```
 
-### 路线二：手机容器自动化（可选，更省手）
+### 路线二：容器自动化（手机端默认 / 电脑端可选）
 
-在手机 Termux 里部署一个 Debian 容器，容器内自己跑 adb 控制自己，
-检测 / 提取 / 修补自动完成（官方工具链，无漏洞）：
+在手机 Termux 里部署 Debian 容器，容器内自己跑 adb 控制自己：
 
 ```sh
 sh container/setup-container.sh     # 一键部署容器（手机端）
 sh container/run.sh                 # 进入容器
 ./adb-connect.sh pair 127.0.0.1:<配对端口> <配对码>   # 无线调试配对
 ./auto-root.sh                      # 自动化检测/提取/修补
+```
+
+也可以让**电脑**跑同一个容器，通过路由器网络连手机
+（手机和电脑连同一 Wi-Fi，把 IP 换成手机在路由器下的 IP）：
+
+```sh
+sh container/pc.sh connect <手机IP>:<端口>   # 电脑端一键，IP 见手机无线调试
 ```
 
 详见 `docs/CONTAINER.md`。
@@ -89,8 +95,8 @@ sh container/run.sh                 # 进入容器
 
 ```
 scripts/   手机端脚本（check / status / patch-boot / install，POSIX sh）
-container/ 手机端容器方案（setup / run / adb-connect / auto-root / Dockerfile）
-docs/      完整流程（PROCESS）、手机容器（CONTAINER）、常见问题（FAQ）
+container/ 容器方案（手机端 proot 默认 + 电脑端 Docker 可选）
+docs/      完整流程（PROCESS）、容器（CONTAINER）、常见问题（FAQ）
 SUPPORTED.md  支持列表数据库（架构/版本/设备/方案判定）
 README.md     本文件
 ```
